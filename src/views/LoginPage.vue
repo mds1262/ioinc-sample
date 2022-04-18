@@ -135,7 +135,6 @@ export default defineComponent({
 
     const moveForgot = async () => {
       // const [ target ]= emailElem.value;
-      // console.log(emailElem.value)
 
       let toaster = await generateToast({
         position: "bottom",
@@ -145,6 +144,7 @@ export default defineComponent({
       });
 
       if (loginForm.value.loginEmail.length === 0) {
+        await emailElem.value.$el.setFocus();
         await toaster.present();
         return;
       }

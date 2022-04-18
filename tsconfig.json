@@ -11,6 +11,7 @@
     "allowSyntheticDefaultImports": true,
     "sourceMap": true,
     "baseUrl": ".",
+    "noImplicitAny": false,
     "types": [
       "webpack-env",
       "jest"
@@ -31,9 +32,10 @@
     "src/**/*.ts",
     "src/**/*.tsx",
     "src/**/*.vue",
+    "src/**/*.js",
     "tests/**/*.ts",
     "tests/**/*.tsx"
-  ],
+, "src/common/utils/common/kakaomap.js"  ],
   "exclude": [
     "node_modules"
   ]

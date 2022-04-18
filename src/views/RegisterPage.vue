@@ -31,24 +31,24 @@
       </ion-card>
       <ion-card>
         <ion-card-header>
-          <ion-card-title>Content</ion-card-title>
+          <ion-card-title>Input Join</ion-card-title>
         </ion-card-header>
         <ion-card-content>
           <ion-item>
             <ion-label position="floating">Name</ion-label>
-            <ion-input type="text"></ion-input>
+            <ion-input type="text" required></ion-input>
           </ion-item>
           <ion-item>
             <ion-label position="floating">Email</ion-label>
-            <ion-input type="email"></ion-input>
+            <ion-input type="email" required></ion-input>
           </ion-item>
           <ion-item>
             <ion-label position="floating">Password</ion-label>
-            <ion-input type="password"></ion-input>
+            <ion-input type="password" required></ion-input>
           </ion-item>
           <ion-item>
             <ion-label position="floating">Confirm password</ion-label>
-            <ion-input type="password"></ion-input>
+            <ion-input type="password" required></ion-input>
           </ion-item>
           <ion-item>
             <ion-label position="floating">Phone number</ion-label>
@@ -61,7 +61,7 @@
           <ion-card-title> Address Information</ion-card-title>
         </ion-card-header>
         <ion-card-content>
-          <ion-item>
+          <!-- <ion-item>
             <ion-label position="floating">Address</ion-label>
             <ion-input type="text"></ion-input>
           </ion-item>
@@ -88,7 +88,7 @@
           <ion-item>
             <ion-label position="floating">City</ion-label>
             <ion-input type="text"></ion-input>
-          </ion-item>
+          </ion-item> -->
         </ion-card-content>
       </ion-card>
     </ion-content>
