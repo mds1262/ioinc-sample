@@ -9,6 +9,8 @@
 <script>
 import { ref, reactive, onMounted } from "vue";
 import { IonCard, IonCardContent, IonItem } from "@ionic/vue";
+import { Geolocation } from "@capacitor/geolocation";
+import { useStore } from "vuex";
 import { kakaoKey } from "@/common/utils/common/keys";
 export default {
   components: {
@@ -19,6 +21,8 @@ export default {
 
   setup(props, context) {
     const kakaoMap = ref(null);
+    const store = useStore();
+
     let map;
 
     const markers = [
@@ -28,7 +32,8 @@ export default {
       { title: "근린공원", lat: 33.451393, lng: 126.570738 },
     ];
 
-    onMounted(() => {
+    onMounted(async () => {
+      await currentPosition();
       if (window.kakao && window.kakao.maps) {
         // 즉시 로드가 안되는 부분이 발생되여 timout 처리함
         setTimeout(() => {
@@ -42,13 +47,14 @@ export default {
     const initMap = () => {
       const script = document.createElement("script");
       script.src = `//dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=${kakaoKey}&libraries=clusterer`;
-      console.log(document.head);
+
       document.head.appendChild(script);
+
       script.addEventListener("load", () => {
         window.kakao.maps.load(() => {
-            const map = loadMap();
-            clickMap(map);
-            mapMarker(map, markers);
+          const map = loadMap();
+          clickMap(map);
+          mapMarker(map, markers);
         });
       });
     };
@@ -62,8 +68,11 @@ export default {
     const loadMap = () => {
       const elem = document.getElementById("kakaoMap");
 
+      const { accuracy, latitude, longitude } =
+        store.getters["moduleMap/getCurrentPosition"];
+
       const options = {
-        center: new window.kakao.maps.LatLng(33.450701, 126.570667),
+        center: new window.kakao.maps.LatLng(latitude, longitude),
         level: 3,
       };
 
@@ -82,9 +91,9 @@ export default {
         const lng = latLng.getLng();
 
         markers.push({
-             title: "Click Point", 
-             lat,
-             lng
+          title: "Click Point",
+          lat,
+          lng,
         });
 
         mapMarker(map, markers);
@@ -115,6 +124,16 @@ export default {
       Clusterer.addMarkers(markers);
     };
 
+    const currentPosition = async () => {
+      const { coords } = await Geolocation.getCurrentPosition();
+      const { accuracy, latitude, longitude } = coords;
+      store.dispatch("moduleMap/updateCurrentPositionAction", {
+        accuracy,
+        latitude,
+        longitude,
+      });
+    };
+
     return {
       kakaoMap,
       initMap,
@@ -122,6 +141,7 @@ export default {
       markers,
       clickMap,
       mapMarker,
+      currentPosition,
     };
   },
 };
