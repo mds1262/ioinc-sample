@@ -21,10 +21,19 @@ export default {
     const kakaoMap = ref(null);
     let map;
 
+    const markers = [
+      { title: "카카오", lat: 33.450705, lng: 126.570677 },
+      { title: "생태연못", lat: 33.450936, lng: 126.569477 },
+      { title: "텃밭", lat: 33.450705, lng: 126.570677 },
+      { title: "근린공원", lat: 33.451393, lng: 126.570738 },
+    ];
+
     onMounted(() => {
       if (window.kakao && window.kakao.maps) {
-          // 즉시 로드가 안되는 부분이 발생되여 timout 처리함
-         setTimeout(() => { setupedMap() }, 1000)
+        // 즉시 로드가 안되는 부분이 발생되여 timout 처리함
+        setTimeout(() => {
+          setupedMap();
+        }, 1000);
       } else {
         initMap();
       }
@@ -32,17 +41,22 @@ export default {
 
     const initMap = () => {
       const script = document.createElement("script");
-      script.src = `//dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=${kakaoKey}`;
-      console.log(document.head)
+      script.src = `//dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=${kakaoKey}&libraries=clusterer`;
+      console.log(document.head);
       document.head.appendChild(script);
       script.addEventListener("load", () => {
-          window.kakao.maps.load(loadMap)
+        window.kakao.maps.load(() => {
+            const map = loadMap();
+            clickMap(map);
+            mapMarker(map, markers);
+        });
       });
     };
 
     const setupedMap = () => {
       const map = loadMap();
       clickMap(map);
+      mapMarker(map, markers);
     };
 
     const loadMap = () => {
@@ -58,18 +72,6 @@ export default {
       return map;
     };
 
-    // const initMap = () => {
-    //   window.kakao.maps.load(() => {
-    //     const options = {
-    //       center: new window.kakao.maps.LatLng(33.450701, 126.570667),
-    //       level: 3,
-    //     };
-    //     map = new window.kakao.maps.Map(kakaoMap.value, options);
-
-    //     // window.kakao.maps.event.addListener('click', clickMap)
-    //   });
-    // };
-
     const clickMap = (map) => {
       return window.kakao.maps.event.addListener(map, "click", (mouseEvent) => {
         // 클릭한 위도, 경도 정보를 가져옵니다
@@ -79,22 +81,47 @@ export default {
         //   // 경도
         const lng = latLng.getLng();
 
-        return { lat, lng };
-        //   let message = "클릭한 위치의 위도는 " + latlng.getLat() + " 이고, ";
-        //   message += "경도는 " + latlng.getLng() + " 입니다";
-        //   console.log(message)
+        markers.push({
+             title: "Click Point", 
+             lat,
+             lng
+        });
 
-        //   var resultDiv = document.getElementById("result");
-        //   resultDiv.innerHTML = message;
+        mapMarker(map, markers);
       });
+    };
+
+    const mapMarker = (map, markersObj) => {
+      const Clusterer = new window.kakao.maps.MarkerClusterer({
+        map: map, // 마커들을 클러스터로 관리하고 표시할 지도 객체
+        averageCenter: true, // 클러스터에 포함된 마커들의 평균 위치를 클러스터 마커 위치로 설정
+        minLevel: 5, // 클러스터 할 최소 지도 레벨
+      });
+      //  const imgSrc = require("@/assets/map/markerStar.png");
+      const imgSize = new window.kakao.maps.Size(24, 35);
+      const markerImage = new window.kakao.maps.MarkerImage(
+        "https://i1.daumcdn.net/dmaps/apis/n_local_blit_04.png",
+        imgSize
+      );
+
+      const markers = markersObj.map((marker) => {
+        return new window.kakao.maps.Marker({
+          position: new window.kakao.maps.LatLng(marker.lat, marker.lng),
+          title: marker.title,
+          image: markerImage,
+        });
+      });
+
+      Clusterer.addMarkers(markers);
     };
 
     return {
       kakaoMap,
       initMap,
       map,
-      //   markerPositions,
+      markers,
       clickMap,
+      mapMarker,
     };
   },
 };
@@ -103,9 +130,9 @@ export default {
 <style lang="scss" scoped>
 ion-card-content {
   padding: 0px;
-#kakaoMap {
-  width: 100vh;
-  height: 40vh;
-}
+  #kakaoMap {
+    width: 100vh;
+    height: 40vh;
+  }
 }
 </style>
