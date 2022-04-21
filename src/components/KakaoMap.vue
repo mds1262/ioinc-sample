@@ -125,6 +125,16 @@ export default {
     };
 
     const currentPosition = async () => {
+      const checkPermission = await Geolocation.checkPermissions();
+      console.log(checkPermission)
+      if(checkPermission.location === 'denied' || checkPermission.coarseLocation === 'denied'){
+          const permissionOptions = {
+              permissions:['location', 'coarseLocation']
+          }
+          const permissionState = await Geolocation.requestPermissions(permissionOptions);
+          console.log(permissionState)
+      }
+
       const { coords } = await Geolocation.getCurrentPosition();
       const { accuracy, latitude, longitude } = coords;
       store.dispatch("moduleMap/updateCurrentPositionAction", {
