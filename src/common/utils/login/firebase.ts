@@ -4,7 +4,9 @@ import {
     sendPasswordResetEmail,
     createUserWithEmailAndPassword,
     signInWithEmailAndPassword,
-    UserCredential
+    UserCredential,
+    signInWithPopup, 
+    GoogleAuthProvider
 } from '@firebase/auth'
 import { LoginInfo } from '@/common/utils/login/loginAuth'
 
@@ -41,5 +43,17 @@ const resetPassword = async(email:string) => {
     await sendPasswordResetEmail(auth, email);
 }
 
+const provider = new GoogleAuthProvider();
 
-export { firebaseEnv, createUser, loginSign, resetPassword}
+const googleLoginPopup = async ():Promise<boolean> => {
+   const result = await signInWithPopup(auth, provider).catch(err => {
+        console.log(err);
+        return false;
+    })
+
+    console.log(result);
+
+    return true;
+}
+
+export { firebaseEnv, createUser, loginSign, resetPassword, googleLoginPopup}

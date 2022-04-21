@@ -43,6 +43,13 @@
               @click="moveRegister"
               >Register</ion-button
             >
+            <ion-button 
+            type="button" 
+            color="tertiary" 
+            size="full"
+            @click="googleAccountLogin"
+              >GoogleLogin</ion-button
+            >            
           </ion-card-content>
         </ion-card>
       </form>
@@ -70,7 +77,7 @@ import { useRouter } from "vue-router";
 
 import { loginCheck } from "@/common/utils/login/loginAuth";
 import generateToast from "@/common/utils/common/toast";
-import { resetPassword } from "@/common/utils/login/firebase";
+import { resetPassword, googleLoginPopup } from "@/common/utils/login/firebase";
 // const useLoginFormState = () => {
 //   return reactive({
 //     loginEmail: "",
@@ -167,12 +174,17 @@ export default defineComponent({
       // }, 3000);
     };
 
+    const googleAccountLogin = async () => {
+      await googleLoginPopup();
+    }
+
     return {
       userLogin,
       moveRegister,
       moveForgot,
+      googleAccountLogin,
       emailElem,
-
+      
       loginForm,
     };
   },
