@@ -1,7 +1,17 @@
 import { RootState } from "@/store";
 import { Module } from "vuex";
-import { userInfoType } from "@/common/utils/login/loginAuth";
-
+import { 
+  UserCredential,
+} from '@firebase/auth'
+// interface LoginResultState {
+//   isSuccess: boolean;
+//   message: string;
+//   userInfo: userInfoType;
+// }
+interface userInfoType {
+  email?: string;
+  accessToken?: string;
+}
 export interface LoginState {
   // isRecoveredPassword: boolean
   // isRecoveringPassword: boolean
@@ -18,8 +28,8 @@ export const moduleLogin: Module<LoginState, RootState> = {
     // isRecoveredPassword: false,
     isLoggedIn: false,
     user: {
-      name: "",
-      address: "",
+      email: "",
+      accessToken:"",
     },
   }),
   mutations: {
@@ -27,24 +37,37 @@ export const moduleLogin: Module<LoginState, RootState> = {
     //     state.isRecoveredPassword = value;
     // },
 
-    updateLoggedIn(state, value) {
+    updateLoginResult(state, value) {
       if (!value) {
         state.isLoggedIn = false;
-        return;
+        state.user = {
+          email: '',
+          accessToken: '',
+        }
+      }else{
+        state.user = {
+          email: value.user.email,
+          accessToken:value.user.accessToken
+        }
+        state.isLoggedIn = true;
       }
-
-      state.user = value;
-      state.isLoggedIn = true;
     },
   },
-  getters: {},
+  getters: {
+    userLoginStatus(state, getters, rootStat): boolean {
+      return state.isLoggedIn;
+    },
+    loginUserInfo(state, getters, rootStat): userInfoType {
+      return state.user;
+    },    
+  },
   actions: {
-    //   recoverPasswordAction({ state, commit, rootState }, payload){
-    //       commit('updateRecoveredPassword', payload);
-    //   },
+    // userLoginAction({ state, commit, rootState }, payload) {
+    //   commit("updateRecoveredPassword", payload);
+    // },
 
-    loginInAction({ state, commit, rootState }, payload) {
-      commit("updateLoggedIn", payload);
+    loginInAction({ state, commit, rootState }, payload: UserCredential | undefined) {
+        commit("moduleLogin/updateLoginResult", payload, {root : true} );
     },
   },
 };

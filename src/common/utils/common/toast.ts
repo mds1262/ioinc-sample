@@ -2,7 +2,7 @@ import { toastController, IonicSafeString, ToastButton,  } from '@ionic/vue'
 
 type DeviceMode = 'ios' | 'md';
 
-interface ToastOptions {
+export interface ToastOptions {
     header?: string;
     message?: string | IonicSafeString;
     cssClass?: string | string[];

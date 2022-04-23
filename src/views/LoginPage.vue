@@ -26,16 +26,23 @@
                 v-model="loginForm.loginPw"
               ></ion-input>
             </ion-item>
+            <ion-button type="submit" color="success" size="full"
+              >Login</ion-button
+            >
+            <ion-button
+              type="button"
+              color="tertiary"
+              size="full"
+              @click="googleAccountLogin"
+              >GoogleLogin</ion-button
+            >
             <ion-button
               color="dark"
               fill="clear"
               size="full"
               @click="moveForgot"
               >Forgot email/password</ion-button
-            >
-            <ion-button type="submit" color="success" size="full"
-              >Login</ion-button
-            >
+            >            
             <ion-button
               color="success"
               fill="clear"
@@ -43,13 +50,6 @@
               @click="moveRegister"
               >Register</ion-button
             >
-            <ion-button 
-            type="button" 
-            color="tertiary" 
-            size="full"
-            @click="googleAccountLogin"
-              >GoogleLogin</ion-button
-            >            
           </ion-card-content>
         </ion-card>
       </form>
@@ -74,10 +74,14 @@ import {
   IonContent,
 } from "@ionic/vue";
 import { useRouter } from "vue-router";
-
-import { loginCheck } from "@/common/utils/login/loginAuth";
+import { loginToastOptions } from "@/common/utils/login/commonMessage";
 import generateToast from "@/common/utils/common/toast";
-import { resetPassword, googleLoginPopup } from "@/common/utils/login/firebase";
+import {
+  resetPassword,
+  googleLoginPopup,
+  loginSign,
+} from "@/common/utils/login/firebase";
+import { UserCredential } from "@firebase/auth";
 // const useLoginFormState = () => {
 //   return reactive({
 //     loginEmail: "",
@@ -111,30 +115,23 @@ export default defineComponent({
     const userLogin = async () => {
       const inputLoginForm = await loginForm.value;
 
-      const resultLogin = await loginCheck(inputLoginForm);
+      const userCredentinal = await loginSign(inputLoginForm);
 
-      const toaster = await generateToast({
-        position: "bottom",
-        message: resultLogin.message,
-        color: "primary",
-        duration: 2000,
-      });
+      await loginProcess(userCredentinal);
+    };
 
-      if (!resultLogin.isSuccess) {
-        toaster.present();
-        return;
-      }
+    const googleAccountLogin = async () => {
+      const userCredentinal = await googleLoginPopup();
 
-      store.dispatch("moduleLogin/loginInAction", resultLogin.userInfo);
+      await loginProcess(userCredentinal);
+    };
+
+    const moveRegister = async () => {
+      const toastOption = loginToastOptions("register", false);
+      const toaster = await generateToast(toastOption);
 
       await toaster.present();
 
-      router.push({
-        path: "/home",
-      });
-    };
-
-    const moveRegister = () => {
       router.push({
         path: "/register",
       });
@@ -142,13 +139,9 @@ export default defineComponent({
 
     const moveForgot = async () => {
       // const [ target ]= emailElem.value;
+      let toastOption = loginToastOptions("forgot", false);
 
-      let toaster = await generateToast({
-        position: "bottom",
-        message: "Insert Your Email",
-        color: "danger",
-        duration: 3000,
-      });
+      let toaster = await generateToast(toastOption);
 
       if (loginForm.value.loginEmail.length === 0) {
         await emailElem.value.$el.setFocus();
@@ -156,12 +149,9 @@ export default defineComponent({
         return;
       }
 
-      toaster = await generateToast({
-        position: "bottom",
-        message: "Send Email for Your Reset Password",
-        color: "primary",
-        duration: 3000,
-      });
+      toastOption = loginToastOptions("forgot", true);
+
+      toaster = await generateToast(toastOption);
 
       await resetPassword(loginForm.value.loginEmail);
 
@@ -174,9 +164,29 @@ export default defineComponent({
       // }, 3000);
     };
 
-    const googleAccountLogin = async () => {
-      await googleLoginPopup();
-    }
+    const loginProcess = async (userCredential?: UserCredential) => {
+      let toastOption = loginToastOptions("forgot", false);
+      let toaster = await generateToast(toastOption);
+
+      if (!userCredential) {
+        store.dispatch("moduleLogin/loginInAction", userCredential);
+
+        toaster.present();
+        return;
+      }
+
+      toastOption = loginToastOptions("login", true);
+      toaster = await generateToast(toastOption);
+
+      store.dispatch("moduleLogin/loginInAction", userCredential);
+
+      await toaster.present();
+
+      console.log(store.getters["moduleLogin/loginUserInfo"]);
+      router.push({
+        path: "/home",
+      });
+    };
 
     return {
       userLogin,
@@ -184,7 +194,7 @@ export default defineComponent({
       moveForgot,
       googleAccountLogin,
       emailElem,
-      
+
       loginForm,
     };
   },

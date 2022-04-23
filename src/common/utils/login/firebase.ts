@@ -8,7 +8,10 @@ import {
     signInWithPopup, 
     GoogleAuthProvider
 } from '@firebase/auth'
-import { LoginInfo } from '@/common/utils/login/loginAuth'
+interface LoginInfo {
+    loginEmail: string;
+    loginPw: string;
+  }
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -35,8 +38,11 @@ const createUser = async(loginInfo: LoginInfo): Promise<UserCredential> => {
     return await createUserWithEmailAndPassword(auth, loginInfo.loginEmail, loginInfo.loginPw);
 }
 
-const loginSign = async(loginInfo: LoginInfo): Promise<UserCredential> => {
-    return await signInWithEmailAndPassword(auth,loginInfo.loginEmail, loginInfo.loginPw)
+const loginSign = async(loginInfo: LoginInfo): Promise<UserCredential | undefined> => {
+    const result = await signInWithEmailAndPassword(auth,loginInfo.loginEmail, loginInfo.loginPw).catch(async err => {
+        return await undefined;
+    })
+    return await result
 }
 
 const resetPassword = async(email:string) => {
@@ -45,15 +51,11 @@ const resetPassword = async(email:string) => {
 
 const provider = new GoogleAuthProvider();
 
-const googleLoginPopup = async ():Promise<boolean> => {
-   const result = await signInWithPopup(auth, provider).catch(err => {
-        console.log(err);
-        return false;
-    })
-
-    console.log(result);
-
-    return true;
+const googleLoginPopup = async ():Promise<UserCredential | undefined> => {
+   const result = await signInWithPopup(auth, provider).catch(async err => {
+       return await undefined
+   })
+    return result
 }
 
 export { firebaseEnv, createUser, loginSign, resetPassword, googleLoginPopup}

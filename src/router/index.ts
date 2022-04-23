@@ -1,15 +1,17 @@
 import { createRouter, createWebHistory } from '@ionic/vue-router';
 import { RouteRecordRaw } from 'vue-router';
+import { loginValidate } from '@/middleware/loginAuth'
 
 const routes: Array<RouteRecordRaw> = [
   {
     path: '',
     redirect: '/loader'
   },
-  {
-    path: '/folder/:id',
-    component: () => import ('@/views/FolderPage.vue')
-  },
+
+  // {
+  //   path: '/folder/:id',
+  //   component: () => import ('@/views/FolderPage.vue')
+  // },
 
   {
     path: '/loader',
@@ -41,5 +43,7 @@ const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes
 })
+
+router.beforeEach(loginValidate)
 
 export default router
