@@ -12,6 +12,7 @@ import { IonCard, IonCardContent, IonItem } from "@ionic/vue";
 import { Geolocation } from "@capacitor/geolocation";
 import { useStore } from "vuex";
 import { kakaoKey } from "@/common/utils/common/keys";
+import markers from '@/common/jsons/location.json'
 export default {
   components: {
     IonCard,
@@ -24,13 +25,6 @@ export default {
     const store = useStore();
 
     let map;
-
-    const markers = [
-      { title: "카카오", lat: 33.450705, lng: 126.570677 },
-      { title: "생태연못", lat: 33.450936, lng: 126.569477 },
-      { title: "텃밭", lat: 33.450705, lng: 126.570677 },
-      { title: "근린공원", lat: 33.451393, lng: 126.570738 },
-    ];
 
     onMounted(async () => {
       await currentPosition();
@@ -73,7 +67,7 @@ export default {
 
       const options = {
         center: new window.kakao.maps.LatLng(latitude, longitude),
-        level: 3,
+        level: 1,
       };
 
       //   console.log(kakaoMap.value)
@@ -104,7 +98,7 @@ export default {
       const Clusterer = new window.kakao.maps.MarkerClusterer({
         map: map, // 마커들을 클러스터로 관리하고 표시할 지도 객체
         averageCenter: true, // 클러스터에 포함된 마커들의 평균 위치를 클러스터 마커 위치로 설정
-        minLevel: 5, // 클러스터 할 최소 지도 레벨
+        minLevel: 1, // 클러스터 할 최소 지도 레벨
       });
       //  const imgSrc = require("@/assets/map/markerStar.png");
       const imgSize = new window.kakao.maps.Size(24, 35);
@@ -134,8 +128,8 @@ export default {
           const permissionState = await Geolocation.requestPermissions(permissionOptions);
           console.log(permissionState)
       }
-
-      const { coords } = await Geolocation.getCurrentPosition();
+  
+      const { coords } = await Geolocation.getCurrentPosition({enableHighAccuracy:true});
       const { accuracy, latitude, longitude } = coords;
       store.dispatch("moduleMap/updateCurrentPositionAction", {
         accuracy,

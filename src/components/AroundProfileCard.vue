@@ -1,7 +1,7 @@
 <template>
   <ion-card>
     <ion-card-header v-if="headerOnOff">
-      <ion-card-subtitle>Last pickup call</ion-card-subtitle>
+      <ion-card-subtitle>Around Profile</ion-card-subtitle>
     </ion-card-header>
     <ion-card-content>
       <ion-item lines="none">
@@ -11,7 +11,7 @@
           color="warning"
         ></ion-icon>
         <ion-label>
-          {{ cardStatus }}
+          <p>{{ cardStatus }}</p>
           <p>{{ cardUpdateAt }}</p>
         </ion-label>
       </ion-item>
@@ -21,7 +21,7 @@
           <p v-if="cardNotes?.length > 0">{{ cardNotes }}</p>
         </ion-label>
       </ion-item>
-      <ion-button v-if="footerOnOff" size="full" fill="clear" color="success" @click="movePickup">See All</ion-button>
+      <ion-button v-if="footerOnOff" size="full" fill="clear" color="success" @click="movePickup">See DetailProfile</ion-button>
     </ion-card-content>
   </ion-card>
 </template>
@@ -80,7 +80,7 @@ export default defineComponent({
 
     const movePickup = () => {
       router.push({
-        path: "/pickup-calls",
+        path: "/aroundSearch",
       });
     };
 

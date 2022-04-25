@@ -22,14 +22,14 @@
         </ion-item>
       </ion-list>
 
-      <PickCallCard
+      <!-- <PickCallCard
         :hasHeader="true"
         :hasFooter="true"
         :status="`on Hold`"
         :createdAt="`2022/04/15 14:00:00`"
         :updateAt="`2021/04/15 14:00:00`"
         :notes="`we have two bags that are full, one with plastic and the other with glasses`"
-      />
+      /> -->
     </ion-content>
     <ion-fab vertical="bottom" horizontal="end" slot="fixed">
       <ion-fab-button color="success" @click="moveNewPickup">
@@ -63,7 +63,7 @@ import { addCircleOutline } from "ionicons/icons";
 
 export default defineComponent({
   components: {
-    PickCallCard,
+    // PickCallCard,
     IonButtons,
     IonContent,
     IonHeader,
@@ -85,7 +85,7 @@ export default defineComponent({
 
     const moveNewPickup = () => {
       router.push({
-        path: "/pickup-call",
+        path: "/aroundSearch",
       });
     };
 

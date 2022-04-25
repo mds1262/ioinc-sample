@@ -51,6 +51,14 @@ export const moduleLogin: Module<LoginState, RootState> = {
         }
         state.isLoggedIn = true;
       }
+      
+      const loginUserInfo = {
+        isLoggedIn: state.isLoggedIn,
+        email: state.user.email,
+        accessToken: state.user.accessToken
+      }
+      
+      localStorage.setItem('loginUserInfo', JSON.stringify(loginUserInfo))
     },
   },
   getters: {

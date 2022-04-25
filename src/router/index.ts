@@ -30,13 +30,13 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import ('@/views/HomePage.vue')
   },
   {
-    path: '/pickup-call',
-    component: () => import ('@/views/PickupCall.vue')
+    path: '/aroundSearch',
+    component: () => import ('@/views/AroundSearchPage.vue')
   },
-  {
-    path: '/pickup-calls',
-    component: () => import ('@/views/PickupCalls.vue')
-  }
+  // {
+  //   path: '/pickup-calls',
+  //   component: () => import ('@/views/PickupCalls.vue')
+  // }
 ]
 
 const router = createRouter({

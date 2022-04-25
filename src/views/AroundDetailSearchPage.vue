@@ -10,7 +10,7 @@
     </ion-header>
 
     <ion-content>
-      <PickCallCard
+      <!-- <PickCallCard
         :hasHeader="false"
         :hasFooter="false"
         :status="`Processing`"
@@ -34,7 +34,7 @@
         :status="`Finished`"
         :createdAt="`2022/04/15 14:00:00`"
         :updateAt="`2021/04/15 14:00:00`"
-      />
+      /> -->
     </ion-content>
   </ion-page>
 </template>

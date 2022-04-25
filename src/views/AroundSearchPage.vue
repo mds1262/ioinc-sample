@@ -13,24 +13,23 @@
       <!-- <img src="assets/img/guide_rotate_slow.gif" /> -->
       <!-- <div ref="mapElem" style="width: 500px; height: 400px"></div> -->
       <KakaoMap />
-      <ion-card>
-        <ion-card-content>
-          <p>Address: Fake street, 111</p>
-          <p>Address: Fake street, 111</p>
-          <p>Address: Fake street, 111</p>
-          <p>Address: Fake street, 111</p>
-          <p>Address: Fake street, 111</p>
-        </ion-card-content>
-      </ion-card>
+      <AroundProfileCard
+        :hasHeader="true"
+        :hasFooter="true"
+        :status="`on Hold`"
+        :createdAt="`2022/04/15 14:00:00`"
+        :updateAt="`2021/04/15 14:00:00`"
+        :notes="`we have two bags that are full, one with plastic and the other with glasses`"
+      />
       <ion-list>
         <ion-item lines="inset">
           <ion-label position="floating"> Notes </ion-label>
           <ion-textarea></ion-textarea>
         </ion-item>
       </ion-list>
-      <ion-button size="full" color="success" @click="moveHome"
+      <!-- <ion-button size="full" color="success" @click="moveHome"
         >Create Pickup Call</ion-button
-      >
+      > -->
     </ion-content>
   </ion-page>
 </template>
@@ -61,6 +60,7 @@ import { arrowBackOutline } from "ionicons/icons";
 
 // import { setKakaoMap } from "@/common/utils/common/kakaomap.js";
 import KakaoMap from "@/components/KakaoMap.vue";
+import AroundProfileCard from "../components/AroundProfileCard.vue";
 
 export default defineComponent({
   components: {
@@ -71,15 +71,13 @@ export default defineComponent({
     IonBackButton,
     IonToolbar,
     IonLabel,
-    IonCard,
     IonList,
     IonItem,
-    IonButton,
-    IonCardContent,
     IonTextarea,
     IonButtons,
-    KakaoMap
-},
+    KakaoMap,
+    AroundProfileCard,
+  },
 
   setup() {
     const router = useRouter();
